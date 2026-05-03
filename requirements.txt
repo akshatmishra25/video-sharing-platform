@@ -1,0 +1,55 @@
+Youtube project
+Functional requirements:
+1. Sign up
+2. Every user has a channel
+3. User can upload videos on the channel (simpler)
+    a. Simpler - user simply gives us a url to their videos
+    b. harder - user uploads a video by dragging it to the browser
+4. Thumbnails (images)
+5. Public/Unlisted videos/Private
+6. Likes, comments
+    a. no nested comments
+    b. nested till one layer
+    c. infinitely nested comments
+7. Recommendations
+    a. Every user sees the same feed (no ML)
+    b. Personalised Recommendations (recommendation system using ML)
+8. Watch history (youtube.com/feed/history)
+9. Subscriptions
+10. Search
+    a. title (SELECT * FROM videos where title Like "%akshat%"
+    b. semantic Search
+11. Subtitles
+    a. user uploads srt file
+    b. auto generated subtitles (openai whisper)
+12. Video transcoding
+
+
+
+1. Sign up / Sign in / feed / video / channels / history
+    - email password submit
+    - On feed page channels and multiple videos and search bar
+    - On video page - video, likes comments and on sidebar multiple videos
+    - history has only pages
+    - channels is simple
+2. Backend
+    a. DB schemas
+        - Users (id, email, password, firstname, lastname, dob, gender)
+        - channel (id, channel name, channel panel, profile picture, description, subscriber count, userId)
+        - Subscriptions (Many to many relationships between users and other users as channels can be subscribed by multiple users)
+        - uploads (id, channelId, videoUrl, thumbnail url, description, title, type: ["unlisted", private, public], likeCount)
+        - likes (id, userId, uploadId)
+        - comments (id, comment, userId, uploadId, createdAt)
+        - watchHistory (id, userId, uploadId, watchedid)
+
+
+Ideal way to create applications
+1. schema
+2. tests
+3. backend
+4. frontend
+
+
+Endpoints
+Not auth (signup, signin, feed, get video details)
+auth (POST /uploads, my uploads get, 
