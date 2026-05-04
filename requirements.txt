@@ -53,3 +53,26 @@ Ideal way to create applications
 Endpoints
 Not auth (signup, signin, feed, get video details)
 auth (POST /uploads, my uploads get, 
+
+
+Upload Service
+- We can use object store for it from service like AWS S3, DO spaces or Cloudflare.
+- We never store a full image / video inside a database. This is basically because of
+    memory constraint and because we always try to insert that data in DB over which
+    we can query.
+- We always store images in an Object Store.
+- An Object Store is a primitive just like a database where assets can be stored. The url
+of that asset like image or video is stored in database.
+- Object store cannot run any code. Their job is to just store data.
+
+Note: The point of a backend server is that user should not be able to directly touch entries
+of database. Or more precisely if without backend server user has logic in code to access database
+then the user can inspect and get access of database. Similarly in object store we should use backend
+to send data to it.
+Firebase and Supabase are exceptions where the frontend directly talks to the db.
+Now to send data to object store from backend. Suppose file is of 1GB and first frontend sends file to
+backend. Backend runs on a RAM which has limited resources and it also has to handle many requests. The
+process of backend will get killed this way.
+Second approach of this can be to just send data to the server in chunks parition by parition. But that
+will take a lot of time.
+Third approach introduces a new concept with object stores of pre-signed urls.

@@ -182,7 +182,7 @@ app.get("/api/videos/:id", async (req, res) => {
                         id: true,
                         username: true,
                         channelName: true,
-                        gender: true,
+                        profilePicture: true,
                     }
                 }
             }
