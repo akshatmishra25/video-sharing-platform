@@ -4,6 +4,23 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { prisma } from "./db";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const R2_URL = "https://84cb5866922c1028015c0aa5c9de8a6d.r2.cloudflarestorage.com";
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY!;
+
+const S3 = new S3Client({
+    region: "auto", // Required by SDK but not used by R2
+    // Provide your Cloudflare account ID
+    endpoint: R2_URL,
+    // Retrieve your S3 API credentials for your R2 bucket via API tokens (see: https://developers.cloudflare.com/r2/api/tokens)
+    credentials: {
+        accessKeyId: R2_ACCESS_KEY_ID,
+        secretAccessKey: R2_SECRET_ACCESS_KEY,
+    },
+    });
 
 const app = express();
 app.use(cors());
@@ -286,6 +303,27 @@ app.get("/api/feed", async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch feed" });
+    }
+});
+
+// ============ OBJECT STORE ============
+app.post("/getPresignedUrl", async (req, res) => {
+    const videoPath = "videos/" + Math.random() + ".mp4";
+    // Generate presigned URL for writing (PUT)
+    // Specify ContentType to restrict uploads to a specific file type
+    const putUrl = await getSignedUrl(
+    S3,
+    new PutObjectCommand({
+        Bucket: "video-sharing-platform",
+        Key: videoPath,
+        ContentType: "video/mp4",
+    }),
+    { expiresIn: 3600 },
+    );
+
+    return {
+        putUrl,
+        finalVideoUrl: "https://pub-8d7ade8d07ea49bc8459d5072d07ec1d.r2.dev/"+videoPath
     }
 });
 

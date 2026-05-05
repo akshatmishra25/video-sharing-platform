@@ -76,3 +76,7 @@ process of backend will get killed this way.
 Second approach of this can be to just send data to the server in chunks parition by parition. But that
 will take a lot of time.
 Third approach introduces a new concept with object stores of pre-signed urls.
+The pre-signed url concept basically requires backend to give a pre-signed url to frontend when frontend
+lets say demands to send 1 video of 4GB to object store. A new url is generated upload.s3.com.video/a.mp4?secrets=
+ or anything similar which gives access of object store to frontend for that 1 request only.
+All other checks for whether frontend is authorized and real user which can be allowed to store data on object store.
