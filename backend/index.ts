@@ -308,6 +308,7 @@ app.get("/api/feed", async (req, res) => {
 
 // ============ OBJECT STORE ============
 app.post("/getPresignedUrl", async (req, res) => {
+    console.log("Inside the getPresignedUrl function");
     const videoPath = "videos/" + Math.random() + ".mp4";
     // Generate presigned URL for writing (PUT)
     // Specify ContentType to restrict uploads to a specific file type
@@ -321,10 +322,10 @@ app.post("/getPresignedUrl", async (req, res) => {
     { expiresIn: 3600 },
     );
 
-    return {
+    return res.json({
         putUrl,
         finalVideoUrl: "https://pub-8d7ade8d07ea49bc8459d5072d07ec1d.r2.dev/"+videoPath
-    }
+    })
 });
 
 // ============ HEALTH CHECK ============
